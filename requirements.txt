@@ -4,3 +4,8 @@ SQLAlchemy
 psycopg2-binary
 python-dotenv
 PyYAML
+pandas
+numpy
+scikit-learn
+streamlit
+plotly
