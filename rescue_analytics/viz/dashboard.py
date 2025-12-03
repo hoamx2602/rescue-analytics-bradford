@@ -172,9 +172,9 @@ def page_system_architecture():
     st.header("System Architecture Diagram")
 
     st.markdown("""
-    Đây là mô hình tổng quan của hệ thống Rescue Analytics:
-    - Luồng dữ liệu từ S3 → ETL → PostgreSQL  
-    - Các module analytics (PCA / t-SNE / feature stats)  
+    This is the system architecture overview of Rescue Analytics:
+    - Data flow from S3 → ETL → PostgreSQL  
+    - Analytics modules (PCA / t-SNE / feature stats)  
     - Dashboard IR/VIS switching  
     - Incremental S3 ETL  
     - Alert pipeline  
@@ -185,7 +185,7 @@ def page_system_architecture():
             svg = f.read()
         st.markdown(svg, unsafe_allow_html=True)
     except Exception as e:
-        st.error("Không tìm thấy file system_architecture.svg. Hãy upload nó vào repo /architecture/")
+        st.error("Could not find system_architecture.svg file. Please upload it to the /architecture/ directory in the repo.")
         st.exception(e)
 
 
