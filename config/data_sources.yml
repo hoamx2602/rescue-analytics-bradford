@@ -1,0 +1,8 @@
+sources:
+  - name: mt_erie_ir
+    prefix: WiSARD_Multi_Modal_Sample/210417_MtErie_Enterprise_IR_0004/
+    modality: ir
+
+  - name: mt_erie_VIS
+    prefix: WiSARD_Multi_Modal_Sample/210417_MtErie_Enterprise_VIS_0003/
+    modality: vis

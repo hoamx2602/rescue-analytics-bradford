@@ -1,0 +1,6 @@
+boto3
+Pillow
+SQLAlchemy
+psycopg2-binary
+python-dotenv
+PyYAML
