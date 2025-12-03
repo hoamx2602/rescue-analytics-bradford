@@ -1,5 +1,5 @@
-
 # rescue_analytics/config.py
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
@@ -8,24 +8,44 @@ import os
 import yaml
 from dotenv import load_dotenv
 
+# load .env khi chạy local
 load_dotenv()
+
+# Streamlit secrets (chỉ tồn tại khi chạy trên Streamlit)
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    HAS_STREAMLIT = False
+
+
+def _get_conf(key: str, default: str = "") -> str:
+    """
+    Ưu tiên:
+    1) st.secrets[key]  (Streamlit Cloud)
+    2) os.getenv(key)   (local .env)
+    """
+    if HAS_STREAMLIT and hasattr(st, "secrets") and key in st.secrets:
+        return str(st.secrets[key])
+    return os.getenv(key, default)
 
 
 @dataclass
 class DBConfig:
-    host: str = os.getenv("DB_HOST", "localhost")
-    port: int = int(os.getenv("DB_PORT", "5432"))
-    name: str = os.getenv("DB_NAME", "rescue_db")
-    user: str = os.getenv("DB_USER", "rescue_user")
-    password: str = os.getenv("DB_PASSWORD", "rescue_password")
+    host: str = _get_conf("DB_HOST", "localhost")
+    port: int = int(_get_conf("DB_PORT", "5432"))
+    name: str = _get_conf("DB_NAME", "rescue_db")
+    user: str = _get_conf("DB_USER", "rescue_user")
+    password: str = _get_conf("DB_PASSWORD", "rescue_password")
 
 
 @dataclass
 class S3Config:
-    access_key: str = os.getenv("S3_ACCESS_KEY", "")
-    secret_key: str = os.getenv("S3_SECRET_KEY", "")
-    bucket: str = os.getenv("S3_BUCKET", "")
-    region: str = os.getenv("S3_REGION", "eu-west-1")  # AWS region, ví dụ: eu-west-1, us-east-1
+    endpoint_url: str = _get_conf("S3_ENDPOINT_URL", "")
+    access_key: str = _get_conf("S3_ACCESS_KEY", "")
+    secret_key: str = _get_conf("S3_SECRET_KEY", "")
+    bucket: str = _get_conf("S3_BUCKET", "")
+    region: str = _get_conf("S3_REGION", "eu-west-1")
 
 
 @dataclass
@@ -45,12 +65,9 @@ class Settings:
 def load_sources(config_path: Path = Path("config/data_sources.yml")) -> List[DataSource]:
     if not config_path.exists():
         return []
-    
-    with config_path.open("r") as f:
-        raw = yaml.safe_load(f)
 
-    if raw is None:
-        return []
+    with config_path.open("r") as f:
+        raw = yaml.safe_load(f) or {}
 
     sources = []
     for src in raw.get("sources", []):

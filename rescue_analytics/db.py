@@ -1,8 +1,9 @@
 # rescue_analytics/db.py
+
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
-from .config import settings
+from rescue_analytics.config import settings
 
 
 def get_db_url() -> str:

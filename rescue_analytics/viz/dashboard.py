@@ -13,6 +13,7 @@ import streamlit as st
 from sqlalchemy import text
 
 from rescue_analytics.db import engine
+from rescue_analytics.config import settings
 from rescue_analytics.analysis.embeddings import (
     perform_pca,
     perform_tsne,
@@ -578,6 +579,7 @@ def main():
         layout="wide",
     )
 
+    st.sidebar.write("DB host in app:", settings.db.host)
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
         "Go to",
