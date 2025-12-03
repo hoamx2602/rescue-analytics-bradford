@@ -164,6 +164,30 @@ def find_counterpart_image(df_all: pd.DataFrame, row: pd.Series) -> pd.Series | 
 
     return candidates.iloc[0]
 
+# =========================
+# TAB 0 – System Architecture
+# =========================
+
+def page_system_architecture():
+    st.header("System Architecture Diagram")
+
+    st.markdown("""
+    Đây là mô hình tổng quan của hệ thống Rescue Analytics:
+    - Luồng dữ liệu từ S3 → ETL → PostgreSQL  
+    - Các module analytics (PCA / t-SNE / feature stats)  
+    - Dashboard IR/VIS switching  
+    - Incremental S3 ETL  
+    - Alert pipeline  
+    """)
+
+    try:
+        with open("architecture/system_architecture.svg", "r") as f:
+            svg = f.read()
+        st.markdown(svg, unsafe_allow_html=True)
+    except Exception as e:
+        st.error("Không tìm thấy file system_architecture.svg. Hãy upload nó vào repo /architecture/")
+        st.exception(e)
+
 
 # =========================
 # TAB 1 – Mission Overview
@@ -583,7 +607,7 @@ def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
         "Go to",
-        ["Mission Overview", "Sensor Analytics", "Scene Embeddings", "Image Explorer"],
+        ["System Architecture", "Mission Overview", "Sensor Analytics", "Scene Embeddings", "Image Explorer"],
     )
 
     if page == "Mission Overview":
@@ -594,6 +618,8 @@ def main():
         page_scene_embeddings()
     elif page == "Image Explorer":
         page_image_explorer()
+    elif page == "System Architecture":
+        page_system_architecture()
 
 
 if __name__ == "__main__":
