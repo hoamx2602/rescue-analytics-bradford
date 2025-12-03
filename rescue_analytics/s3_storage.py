@@ -21,3 +21,15 @@ def get_s3_client():
         aws_access_key_id=cfg.access_key,
         aws_secret_access_key=cfg.secret_key,
     )
+    
+def get_presigned_url(s3_key: str, expires_in: int = 3600) -> str:
+    """
+    Tạo URL tạm thời để Streamlit load ảnh trực tiếp từ S3.
+    """
+    s3 = get_s3_client()
+    url = s3.generate_presigned_url(
+        "get_object",
+        Params={"Bucket": settings.s3.bucket, "Key": s3_key},
+        ExpiresIn=expires_in,
+    )
+    return url
